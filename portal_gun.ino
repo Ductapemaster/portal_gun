@@ -18,9 +18,9 @@ const int logSineTable[32] = {
 
 // Fade out/in functions - not ideal since we only have 8 steps...brightness 8 on the display is quite bright though!
 void fadeout() {
-  for (int i = 7; i >=0; i++) {
+  for (int i = 7; i >=0; i--) {
   alpha4.setBrightness(i);
-  delay(100);
+  delay(125);
   }
 }
 
