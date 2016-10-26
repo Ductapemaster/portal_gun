@@ -25,9 +25,9 @@ Most of the parts are 3D printed, with a few exceptions:
 
 # Remaining Work
 * Code
-** Optimize portal LED sequence to fade out at the very least, possibly fade in?
-** Add flashing routine for "lightning" tube LED (RNG to analog write?)
-** Add sleep functionality in for long-press of rotary encoder button
+    * Optimize portal LED sequence to fade out at the very least, possibly fade in?
+    * Add flashing routine for "lightning" tube LED (RNG to analog write?)
+    * Add sleep functionality in for long-press of rotary encoder button
 * Documentation
-** Could use some links for the items I bought
-** Schematic
+    * Could use some links for the items I bought
+    * Schematic
