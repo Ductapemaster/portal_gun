@@ -97,6 +97,22 @@ void writeDim(Adafruit_AlphaNum4 a, char chr, int dim){
   sprintf(buf, "%c%03u", chr, dim);
   writeArr(alpha4, buf);
 }
+
+// Generate scrolling LEDs
+void portalLED(uint8_t cycles) {
+  for (int i = 0; i < cycles; i++) {
+    for (int j = 0; j < 32; j++) {
+      analogWrite( 9,  logSineTable[  j       ]);
+      analogWrite(10,  logSineTable[ (j + 6) % 32]);
+      analogWrite(11,  logSineTable[ (j + 11) % 32]);
+      delay(25);
+    }
+    analogWrite( 9, 0);
+    analogWrite(10, 0);
+    analogWrite(11, 0);
+  }
+}
+
 void setup() {
   //Serial.begin(9600);
   
@@ -122,15 +138,6 @@ void setup() {
     delay(250);
   }
 
-  // Generate scrolling LEDs
-  for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 32; j++) {
-      analogWrite( 9,  logSineTable[  j       ]);
-      analogWrite(10,  logSineTable[ (j + 6) % 32]);
-      analogWrite(11,  logSineTable[ (j + 11) % 32]);
-      delay(25);
-    }
-  }
 
   // Test code for using sprintf to generate display string from a number
   for (int i = 0; i < 256; i++) {
