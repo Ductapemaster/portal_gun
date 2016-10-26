@@ -115,6 +115,7 @@ void portalLED(uint8_t cycles) {
 
 void setup() {
   //Serial.begin(9600);
+  pinMode(5, INPUT);
   
   alpha4.begin(0x70);  // pass in the address
 
@@ -148,6 +149,28 @@ void setup() {
   knob.write(dimensionNum);
 }
 
+long btnDelay = 0;
+
 void loop() {
+
+  // Crude way to determine how long the button was pressed for
+  // Stop incrementing if we've reached our max delay - we drop right into processing if its held down long enough
+  if (digitalRead(5) == LOW && btnDelay < 200000) {
+    btnDelay++;
+  } else {
+    // Short press, start portal thing
+    if (btnDelay > 100 && btnDelay < 200000) {
+      portalLED(3);
+    } 
+    // Long press, turn off
+    else {
+      // SLEEEEEEP
+    }
+    btnDelay = 0;
+  }
+  
+  if (btnDelay == 256) {
+    
+  }
   processKnob();
 }
