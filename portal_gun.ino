@@ -124,7 +124,7 @@ void setup() {
   alpha4.setBrightness(0);
 
   // Load our display buffer with some initial characters
-  char displaybuffer[20] = {'X','X','X','X',' ',' ',' ',' ',' ',' ','H','E','L','L','O',' ','R','I','C','K'};
+  char displaybuffer[22] = {'X','X','X','X',' ',' ',' ',' ','H','E','L','L','O',' ','R','I','C','K',' ',' ',' ',' ',};
 
   // Write first four chars to display and fade in.
   writeArr(alpha4, displaybuffer);
@@ -133,24 +133,17 @@ void setup() {
   delay(2000);
 
   // Scroll through buffer for startup message
-  for (int i = 4; i < 17; i++){
+  for (int i = 4; i <= 18; i++){
     writeArr(alpha4, displaybuffer + i);
     delay(250);
   }
 
+  // Transition to Dimension Display
+  delay(500);
+  alpha4.setBrightness(0);
+  writeDim(alpha4, dimensionChar, dimensionNum);
+  fadein();
 
-  // Test code for using sprintf to generate display string from a number
-  for (int i = 0; i < 256; i++) {
-
-    // Print out dimension 
-    sprintf(displaybuffer, "C%03u", i);
-    
-    writeArr(alpha4, displaybuffer);
-    
-    delay(100);
-  
-  }
-  
   // Clear any rotations up to this point
   knob.write(dimensionNum);
 }
