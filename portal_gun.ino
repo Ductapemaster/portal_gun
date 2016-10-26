@@ -8,18 +8,35 @@
 #include <Encoder.h>
 #define ENCODER_OPTIMIZE_INTERRUPTS
 
+// Dimension display bounds
 #define DIM_MAX 199
 #define DIM_MIN 0
+
+// Pin Definitions
+#define P_ENC1      2
+#define P_ENC2      3
+#define P_ENCBTN    5
+#define P_LED_FR    9
+#define P_LED_FC    10
+#define P_LED_FL    11
+#define P_LED_TUBE  13
+
+// Button thresholds
+#define BTN_DEBOUNCE  100
+#define BTN_LONGPRESS 100000
 
 // Display
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
 // Encoder
-Encoder knob(2, 3);
+Encoder knob(P_ENC1, P_ENC2);
 
 // Values adjusted by the encoder
 int  dimensionNum    = 132;
 char dimensionChar   = 'C';
+
+// Button press counter
+long btnDelay = 0;
 
 // Process knob movement
 // Dimension # is bounded between 0 and 200
@@ -55,6 +72,26 @@ void processKnob() {
   if (pos != dimensionNum) {
     writeDim(alpha4, dimensionChar, pos);
     dimensionNum = pos;
+  }
+}
+
+void processButton() {
+  // Crude way to determine how long the button was pressed for
+  // Stop incrementing if we've reached our max delay - we drop right into processing if its held down long enough
+  if (digitalRead(P_ENCBTN) == LOW && btnDelay < BTN_LONGPRESS) {
+    btnDelay++;
+  } else {
+    // Short press, start portal thing
+    if (btnDelay > BTN_DEBOUNCE && btnDelay < BTN_LONGPRESS) {
+      portalLED(3);
+    } 
+    // Long press, turn off
+    else {
+      // TODO: SLEEEEEEP
+    }
+
+    // We should only reset if digitalRead(5) == HIGH
+    btnDelay = 0;
   }
 }
 
@@ -102,20 +139,21 @@ void writeDim(Adafruit_AlphaNum4 a, char chr, int dim){
 void portalLED(uint8_t cycles) {
   for (int i = 0; i < cycles; i++) {
     for (int j = 0; j < 32; j++) {
-      analogWrite( 9,  logSineTable[  j       ]);
-      analogWrite(10,  logSineTable[ (j + 6) % 32]);
-      analogWrite(11,  logSineTable[ (j + 11) % 32]);
+      analogWrite(P_LED_FR, logSineTable[  j       ]);
+      analogWrite(P_LED_FC, logSineTable[ (j + 6) % 32]);
+      analogWrite(P_LED_FL, logSineTable[ (j + 11) % 32]);
       delay(25);
     }
-    analogWrite( 9, 0);
-    analogWrite(10, 0);
-    analogWrite(11, 0);
+    
+    // TODO: Make fadeout routine
+    analogWrite(P_LED_FR, 0);
+    analogWrite(P_LED_FC, 0);
+    analogWrite(P_LED_FL, 0);
   }
 }
 
 void setup() {
-  //Serial.begin(9600);
-  pinMode(5, INPUT);
+  pinMode(P_ENCBTN, INPUT);
   
   alpha4.begin(0x70);  // pass in the address
 
@@ -149,28 +187,7 @@ void setup() {
   knob.write(dimensionNum);
 }
 
-long btnDelay = 0;
-
 void loop() {
-
-  // Crude way to determine how long the button was pressed for
-  // Stop incrementing if we've reached our max delay - we drop right into processing if its held down long enough
-  if (digitalRead(5) == LOW && btnDelay < 200000) {
-    btnDelay++;
-  } else {
-    // Short press, start portal thing
-    if (btnDelay > 100 && btnDelay < 200000) {
-      portalLED(3);
-    } 
-    // Long press, turn off
-    else {
-      // SLEEEEEEP
-    }
-    btnDelay = 0;
-  }
-  
-  if (btnDelay == 256) {
-    
-  }
+  processButton();
   processKnob();
 }
