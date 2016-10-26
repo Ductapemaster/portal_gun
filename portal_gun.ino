@@ -5,7 +5,58 @@
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
 
+#include <Encoder.h>
+#define ENCODER_OPTIMIZE_INTERRUPTS
+
+#define DIM_MAX 199
+#define DIM_MIN 0
+
+// Display
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
+
+// Encoder
+Encoder knob(2, 3);
+
+// Values adjusted by the encoder
+int  dimensionNum    = 132;
+char dimensionChar   = 'C';
+
+// Process knob movement
+// Dimension # is bounded between 0 and 200
+// ASCII ID char is dimension number % 200, bounded A to Z
+void processKnob() {
+  int pos = knob.read();
+  
+  if (pos < DIM_MIN) {
+    //Modulo 200 negative transition
+    if (dimensionChar > 'A') {
+      dimensionChar--;
+      pos += DIM_MAX;
+    } 
+    // Lower bound
+    else {
+      pos = DIM_MIN;
+    }
+    knob.write(pos);
+  }
+  else if (pos >= DIM_MAX) {
+    // Modulo 200 positive transition
+    if (dimensionChar < 'Z') {
+      dimensionChar++;
+      pos -= DIM_MAX;
+    }
+    // Upper bound
+    else {
+      pos = DIM_MAX;
+    }
+    knob.write(pos);
+  }
+  
+  if (pos != dimensionNum) {
+    writeDim(alpha4, dimensionChar, pos);
+    dimensionNum = pos;
+  }
+}
 
 // 32 sample log sine wave table, since brightness is logarithmic
 // Yes I know the top and bottom points repeat
@@ -40,6 +91,12 @@ void writeArr(Adafruit_AlphaNum4 a, char* buf) {
   a.writeDisplay();
 }
 
+// Print out dimension 
+void writeDim(Adafruit_AlphaNum4 a, char chr, int dim){
+  char buf[4];
+  sprintf(buf, "%c%03u", chr, dim);
+  writeArr(alpha4, buf);
+}
 void setup() {
   //Serial.begin(9600);
   
@@ -87,8 +144,10 @@ void setup() {
   
   }
   
+  // Clear any rotations up to this point
+  knob.write(dimensionNum);
 }
 
 void loop() {
-  // Nothing to see here
+  processKnob();
 }
