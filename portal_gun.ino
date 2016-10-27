@@ -15,8 +15,8 @@
 
 // Pin Definitions
 #define P_ENCBTN    2
-#define P_ENC1      3
-#define P_ENC2      4
+#define P_ENC1      4
+#define P_ENC2      5
 #define P_LED_FR    9
 #define P_LED_FC    10
 #define P_LED_FL    11
