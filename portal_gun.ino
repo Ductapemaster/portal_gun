@@ -20,7 +20,9 @@
 #define P_LED_FR    9
 #define P_LED_FC    10
 #define P_LED_FL    11
-#define P_LED_TUBE  13
+#define P_LED_TUBE1  6
+#define P_LED_TUBE2  7
+#define P_LED_TUBE3  8
 
 // Button thresholds
 #define BTN_DEBOUNCE_DLY  100
@@ -156,13 +158,15 @@ void portalLED(uint8_t cycles) {
 
   // Log current knob position
   long pos = knob.read();
+  digitalWrite(P_LED_TUBE1, HIGH);
+  digitalWrite(P_LED_TUBE2, HIGH);
+  digitalWrite(P_LED_TUBE3, HIGH);
 
   for (int i = 0; i < cycles; i++) {
     for (int j = 0; j < 32; j++) {
       analogWrite(P_LED_FR, logSineTable[  j       ]);
       analogWrite(P_LED_FC, logSineTable[ (j + 6) % 32]);
       analogWrite(P_LED_FL, logSineTable[ (j + 11) % 32]);
-      analogWrite(P_LED_TUBE, logSineTable[random(0, 31)]);   // Random flashing for "lightning" effect
       delay(25);
     }
     
@@ -170,7 +174,9 @@ void portalLED(uint8_t cycles) {
     analogWrite(P_LED_FR, 0);
     analogWrite(P_LED_FC, 0);
     analogWrite(P_LED_FL, 0);
-    analogWrite(P_LED_TUBE, 0);
+    digitalWrite(P_LED_TUBE1, 0);
+    digitalWrite(P_LED_TUBE2, 0);
+    digitalWrite(P_LED_TUBE3, 0);
   }
 
   // Restore knob position from before in case it was rotated during
@@ -238,6 +244,9 @@ void setup() {
 
   // Test this pullup - is it sufficient?
   pinMode(P_ENCBTN, INPUT_PULLUP);
+  pinMode(P_LED_TUBE1, OUTPUT);
+  pinMode(P_LED_TUBE2, OUTPUT);
+  pinMode(P_LED_TUBE3, OUTPUT);
   
   alpha4.begin(0x70);  // pass in the address
 
