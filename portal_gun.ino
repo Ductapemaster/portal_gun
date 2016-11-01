@@ -14,15 +14,15 @@
 #define DIM_MIN 0
 
 // Pin Definitions
-#define P_ENCBTN    2
-#define P_ENC1      4
-#define P_ENC2      5
-#define P_LED_FR    9
-#define P_LED_FC    10
-#define P_LED_FL    11
-#define P_LED_TUBE1  6
-#define P_LED_TUBE2  7
-#define P_LED_TUBE3  8
+#define P_ENCBTN      2
+#define P_ENC1        4
+#define P_ENC2        5
+#define P_LED_TUBE1   6
+#define P_LED_TUBE2   7
+#define P_LED_TUBE3   8
+#define P_LED_FR      9
+#define P_LED_FC      10
+#define P_LED_FL      11
 
 // Button thresholds
 #define BTN_DEBOUNCE_DLY  100

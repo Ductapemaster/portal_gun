@@ -25,9 +25,18 @@ Most of the parts are 3D printed, with a few exceptions:
 
 # Remaining Work
 * Code
-    * Optimize portal LED sequence to fade out at the very least, possibly fade in?
-    * Add flashing routine for "lightning" tube LED (RNG to analog write?)
-    * Add sleep functionality in for long-press of rotary encoder button
+    * <s>Optimize portal LED sequence to fade out at the very least, possibly fade in?</s> Didin't have time for this one.
+    * <s>Add flashing routine for "lightning" tube LED (RNG to analog write?)</s> Replaced single LED with 3 because I accidentally bought really dim 10mm LEDs.  
+    * <s>Add sleep functionality in for long-press of rotary encoder button</s>
 * Documentation
     * Could use some links for the items I bought
     * Schematic
+
+# Version 2 Possibilities
+* Dedicated PCB to make it as small as possible
+* Smarter battery management
+    - Charge port
+    - Power switch, or  very low power sleep mode
+* Use very bright LEDs - standard green ones were quite dim, even in the dark.
+    - Will need to use FETs for switching higher currents
+* Don't break the rotary encoder when installing it 5 minutes before the party...
