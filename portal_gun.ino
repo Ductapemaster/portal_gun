@@ -111,7 +111,7 @@ void processButton() {
       // Long press, turn off
       else {
         shutdownRoutine();
-        goToSleep();
+        goToSleep();    // Sleep waits here for interrupt
         startupRoutine();
       }
     }
@@ -248,7 +248,11 @@ void setup() {
   pinMode(P_LED_TUBE2, OUTPUT);
   pinMode(P_LED_TUBE3, OUTPUT);
   
+  // Initialize Display - we do this again in startupRoutine, but we need
+  // to do it once on initial powerup before sleeping
   alpha4.begin(0x70);  // pass in the address
+  alpha4.clear();
+  alpha4.writeDisplay();
 
 }
 
